@@ -51,6 +51,30 @@ def calculate_distance(x1, x2, y1, y2):
     distance = math.sqrt(dist_x**2 + dist_y**2)
     return distance
 
+def create_savable_list(x, y, target_list, enemy_list):
+    """
+    Args:
+        x: player x
+        y: player y
+        target_list: list of human
+        enemy_list: list of zombies
+    returns a list a savable human
+    """
+    savable_list = []
+    player_time = 1000
+    enemy_time = 1000
+    for i in target_list:
+        player_time = (calculate_distance(x, i.x, y, i.y) / 1000)
+        for j in enemy_list:
+            zombie_time = (calculate_distance(i.x, j.x, i.y, j.y) / 400)
+            if zombie_time < enemy_time:
+                enemy_time = zombie_time
+        if player_time <= enemy_time:
+            savable_list.append(i)
+        player_time = 1000
+        enemy_time = 1000
+    return savable_list
+
 def target_closest(x, y, target_list):
     """
     Args:
@@ -93,6 +117,9 @@ while True:
     # To debug: print("Debug messages...", file=sys.stderr, flush=True)
 
     # Your destination coordinates
-    dest_x, dest_y = target_closest(x, y, human_list)
+
+    target_list = create_savable_list(x, y, human_list, zombie_list)
+    dest_x, dest_y = target_closest(x, y, target_list)
+
 
     print(str(dest_x) + " " + str(dest_y))
