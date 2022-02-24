@@ -73,7 +73,34 @@ def create_savable_list(x, y, target_list, enemy_list):
             savable_list.append(i)
         player_time = 1000
         enemy_time = 1000
+    if len(savable_list) == 0:
+        savable_list.append(target_list[0])
     return savable_list
+
+def most_dangerous(x, y, target_list, enemy_list):
+    """
+    Args:
+        x: player x
+        y: player y
+        target_list: list of human
+        enemy_list: list of zombies
+    returns the human in most danger
+    """
+    smallest_gap = 1000
+    human_in_danger = target_list[0]
+    dangerous_zombie = enemy_list[0]
+    for i in target_list:
+        for j in enemy_list:
+            zombie_time = (calculate_distance(i.x, j.x, i.y, j.y) / 400)
+            if zombie_time < smallest_gap:
+                smallest_gap = zombie_time
+                human_in_danger = i
+                dangerous_zombie = j
+    return human_in_danger, dangerous_zombie
+
+
+
+
 
 def target_closest(x, y, target_list):
     """
@@ -119,7 +146,9 @@ while True:
     # Your destination coordinates
 
     target_list = create_savable_list(x, y, human_list, zombie_list)
-    dest_x, dest_y = target_closest(x, y, target_list)
+    target, target2 = most_dangerous(x, y, target_list, zombie_list)
+    dest_x = (2*target.x + target2.x) / 3
+    dest_y = (2*target.y + target2.y) / 3
 
 
-    print(str(dest_x) + " " + str(dest_y))
+    print(str(int(dest_x)) + " " + str(int(dest_y)))
