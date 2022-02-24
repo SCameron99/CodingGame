@@ -64,7 +64,7 @@ def create_savable_list(x, y, target_list, enemy_list):
     player_time = 1000
     enemy_time = 1000
     for i in target_list:
-        player_time = (calculate_distance(x, i.x, y, i.y) / 1000)
+        player_time = ((calculate_distance(x, i.x, y, i.y)-1500) / 1000)
         for j in enemy_list:
             zombie_time = (calculate_distance(i.x, j.x, i.y, j.y) / 400)
             if zombie_time < enemy_time:
