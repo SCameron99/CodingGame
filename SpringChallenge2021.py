@@ -16,7 +16,7 @@ class Tree():
         self.owner = owner
         self.dormant = dormant
 
-def return_lvl3(list_of_tree): #Returns a list of player owned lv3 tress
+def list_my_trees(list_of_tree): #Returns a list of player owned lv3 tress
     return_list = []
     for i in list_of_tree:
         if i.owner == 1:
@@ -47,9 +47,11 @@ while True:
     opp_score = int(inputs[1])  # opponent's score
     opp_is_waiting = inputs[2] != "0"  # whether your opponent is asleep until the next day
     number_of_trees = int(input())  # the current amount of trees
-    index_list = []
+    
+    trees = []
+    my_trees = []
+
     for i in range(number_of_trees):
-        trees = []
         inputs = input().split()
         cell_index = int(inputs[0])  # location of this tree
         size = int(inputs[1])  # size of this tree: 0-3
@@ -57,9 +59,9 @@ while True:
         is_dormant = inputs[3] != "0"  # 1 if this tree is dormant
         tree = Tree(cell_index, size, is_mine, is_dormant)
         trees.append(tree)
-        if is_mine == 1:
-            index_list.append(cell_index)
+
     number_of_possible_actions = int(input())  # all legal actions
+
     for i in range(number_of_possible_actions):
         possible_action = input()  # try printing something from here to start with
 
@@ -69,8 +71,27 @@ while True:
 
     # GROW cellIdx | SEED sourceIdx targetIdx | COMPLETE cellIdx | WAIT <message>
 
-    my_trees = return_lvl3(trees)
-    print("COMPLETE " +str(index_list[0]))
+    my_trees = list_my_trees(trees)
+
+    turn_complete = False
+
+    for i in my_trees:
+        if i.size == 3 and i.dormant == 0 and not turn_complete:
+            print("COMPLETE " + str(i.index))
+            turn_complete = True
+
+    for i in my_trees:
+        if i.size == 2 and i.dormant == 0 and not turn_complete:
+            print("GROW "+ str(i.index))
+            turn_complete = True
+            
+    for i in my_trees:
+        if i.size == 1 and i.dormant == 0 and not turn_complete:
+            print("GROW " + str(i.index))
+            turn_complete = True
+
+
+    
     
             
 
