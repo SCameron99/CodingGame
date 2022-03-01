@@ -91,6 +91,9 @@ for i in range(number_of_cells):
     game_tiles.append(game_tile)
 
 # game loop
+
+modifier = 0
+
 while True:
     day = int(input())  # the game lasts 24 days: 0-23
     nutrients = int(input())  # the base score you gain from the next COMPLETE action
@@ -142,6 +145,14 @@ while True:
 
     turn_complete = False
 
+    #EXPAND VS GROW MODIFIER (0 = EXPAND, 2 = GROW)
+    if day < 8:
+        modifier = 0
+    elif 8 <= day <= 15:
+        modifier = 1
+    elif day > 15:
+        modifier = 2
+
     #PRIORITY 3 LVL3
     if len(my_lvl3) >= 3:
         for i in my_lvl3:
@@ -158,13 +169,13 @@ while True:
     
     
     #PRIORITY FREE SEED
-    if seed_number == 0:
+    if seed_number == 0 and not turn_complete:
         dest = find_best_neighbour(my_trees[0].index, game_tiles, trees)
         print("SEED " + str(my_trees[0].index) + " " + str(dest))
         turn_complete = True
 
     #PRIORITY LV3 CHEAPER THAN LVL2
-    if lvl3_cost <= (lvl2_cost + 1)and not turn_complete:
+    if lvl3_cost <= (lvl2_cost + 3*modifier)and not turn_complete:
         if sun >= lvl3_cost:
             for i in my_lvl2:
                 if i.dormant == 0 and not turn_complete:
@@ -172,7 +183,7 @@ while True:
                     turn_complete = True
 
     #PRIORITY LV2 CHEAPER THAN LVL1
-    if lvl2_cost <= (lvl1_cost + 1) and not turn_complete:
+    if lvl2_cost <= (lvl1_cost + 2*modifier) and not turn_complete:
         if sun >= lvl2_cost:
             for i in my_lvl1:
                 if i.dormant == 0 and not turn_complete:
@@ -180,7 +191,7 @@ while True:
                     turn_complete = True
 
     #PRIORITY LV1 CHEAPER THAN SEED
-    if lvl1_cost <= (seed_cost +1) and not turn_complete:
+    if lvl1_cost <= (seed_cost + 1*modifier) and not turn_complete:
         if sun >= lvl1_cost:
             for i in my_seeds:
                 if i.dormant == 0 and not turn_complete:
@@ -214,7 +225,7 @@ while True:
                             turn_complete = True
 
     #TODO
-    #IMPROVE SEED WITH NEIGHBOUR OF NEIGHBOUR OF NEIGHBOUR
+    #PRIORITISE GROW IN RICH SOIL
     #
     
 
