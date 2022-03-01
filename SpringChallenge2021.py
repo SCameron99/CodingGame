@@ -26,7 +26,7 @@ class Tree():
 def list_my_trees(list_of_tree): #Returns a list of player owned lv3 tress
     return_list = []
     for i in list_of_tree:
-        if i.owner == 1:
+        if i.owner == 1 and i.size != 0:
             return_list.append(i)
     return return_list
         
@@ -34,8 +34,8 @@ def count_my_seeds(list_of_tree):
     seed_list = []
     count = 0
     for i in list_of_tree:
-        if i.size == 0:
-            count =+ 1
+        if i.size == 0 and i.owner == 1:
+            count += 1
             seed_list.append(i)
     return count, seed_list
 
@@ -44,16 +44,32 @@ def count_tree(list_of_tree, size):
     count = 0
     for i in list_of_tree:
         if i.size == size:
-            count =+ 1
+            count += 1
             tree_list.append(i)
     return count, tree_list
 
-def find_best_neighbour(tree_index, game_tiles): #Returns the index of the neigh with most richness
+def find_best_neighbour(tree_index, game_tiles, tree_list): #Returns the index of the neigh with most richness
     max_richness = 0
-    cell_index = 5
-    for i in game_tiles:
+    cell_index = 99
+    for i in game_tiles: #i is the index of the source tree
         if tree_index == i.index:
-            for j in game_tiles:
+            for j in game_tiles: 
+                if j.index == i.neigh0 or j.index == i.neigh1 or j.index == i.neigh2 or j.index == i.neigh3 or j.index == i.neigh4 or j.index == i.neigh5:
+                    occupied = False
+                    for k in tree_list:
+                        if k.index == j.index:
+                            occupied = True
+                    if not occupied and j.richness > max_richness:
+                        cell_index = j.index
+                        max_richness = j.richness
+    return cell_index
+
+def find_best_neighbour2(tree_index, game_tiles): #Returns the index of the neigh with most richness
+    max_richness = 0
+    cell_index = 99
+    for i in game_tiles: #i is the index of the source tree
+        if tree_index == i.index:
+            for j in game_tiles: 
                 if j.index == i.neigh0 or j.index == i.neigh1 or j.index == i.neigh2 or j.index == i.neigh3 or j.index == i.neigh4 or j.index == i.neigh5:
                     if j.richness > max_richness:
                         cell_index = j.index
@@ -112,32 +128,97 @@ while True:
 
     
     my_trees = list_my_trees(trees)
-    seed_number, my_seeds = count_tree(my_trees, 0)
+    seed_number, my_seeds = count_my_seeds(trees)
     seed_cost = seed_number
 
     lvl1_number, my_lvl1 = count_tree(my_trees, 1)
-    lvl_cost = lvl1_number + 1
+    lvl1_cost = lvl1_number + 1
+
+    lvl2_number, my_lvl2 = count_tree(my_trees, 2)
+    lvl2_cost = lvl2_number + 3
+
+    lvl3_number, my_lvl3 = count_tree(my_trees, 3)
+    lvl3_cost = lvl3_number + 7
 
     turn_complete = False
+
+    #PRIORITY 3 LVL3
+    if len(my_lvl3) >= 3:
+        for i in my_lvl3:
+            if not turn_complete:
+                print("COMPLETE " + str(i.index))
+                turn_complete = True
+                
+    #PRIORITY DAY23
+    if day == 23:
+        for i in my_lvl3:
+            if not turn_complete:
+                print("COMPLETE " + str(i.index))
+                turn_complete = True
+    
+    
+    #PRIORITY FREE SEED
     if seed_number == 0:
-        dest = find_best_neighbour(my_trees[0].index, game_tiles)
+        dest = find_best_neighbour(my_trees[0].index, game_tiles, trees)
         print("SEED " + str(my_trees[0].index) + " " + str(dest))
         turn_complete = True
 
-    for i in my_trees:
-        if i.size == 3 and i.dormant == 0 and not turn_complete:
-            print("COMPLETE " + str(i.index))
-            turn_complete = True
+    #PRIORITY LV3 CHEAPER THAN LVL2
+    if lvl3_cost <= (lvl2_cost + 1)and not turn_complete:
+        if sun >= lvl3_cost:
+            for i in my_lvl2:
+                if i.dormant == 0 and not turn_complete:
+                    print("GROW " + str(i.index))
+                    turn_complete = True
 
-    for i in my_trees:
-        if i.size == 2 and i.dormant == 0 and not turn_complete:
-            print("GROW "+ str(i.index))
-            turn_complete = True
-            
-    for i in my_trees:
-        if i.size == 1 and i.dormant == 0 and not turn_complete:
-            print("GROW " + str(i.index))
-            turn_complete = True
+    #PRIORITY LV2 CHEAPER THAN LVL1
+    if lvl2_cost <= (lvl1_cost + 1) and not turn_complete:
+        if sun >= lvl2_cost:
+            for i in my_lvl1:
+                if i.dormant == 0 and not turn_complete:
+                    print("GROW " + str(i.index))
+                    turn_complete = True
+
+    #PRIORITY LV1 CHEAPER THAN SEED
+    if lvl1_cost <= (seed_cost +1) and not turn_complete:
+        if sun >= lvl1_cost:
+            for i in my_seeds:
+                if i.dormant == 0 and not turn_complete:
+                    print("GROW " + str(i.index))
+                    turn_complete = True
+    elif not turn_complete:
+        if sun >= seed_cost:
+            if len(my_lvl3) > 0:
+                for i in my_lvl3:
+                    if i.dormant == 0 and not turn_complete:
+                        best_neigh = find_best_neighbour2(i.index, game_tiles)
+                        best_2neigh = find_best_neighbour2(best_neigh, game_tiles)
+                        dest = find_best_neighbour(best_2neigh, game_tiles, trees)
+                        if dest != 99:
+                            print("SEED " + str(i.index) + " " + str(dest))
+                            turn_complete = True
+            if len(my_lvl2) > 0 and not turn_complete:
+                for i in my_lvl2:
+                    if i.dormant == 0 and not turn_complete:
+                        best_neigh = find_best_neighbour2(i.index, game_tiles)
+                        dest = find_best_neighbour(best_neigh, game_tiles, trees)
+                        if dest != 99:
+                            print("SEED " + str(i.index) + " " + str(dest))
+                            turn_complete = True
+            if len(my_lvl1) > 0 and not turn_complete:
+                for i in my_lvl1:
+                    if i.dormant == 0 and not turn_complete:
+                        dest = find_best_neighbour(i.index, game_tiles, trees)
+                        if dest != 99:
+                            print("SEED " + str(i.index) + " " + str(dest))
+                            turn_complete = True
+
+    #TODO
+    #IMPROVE SEED WITH NEIGHBOUR OF NEIGHBOUR OF NEIGHBOUR
+    #
+    
+
+    
 
     if not turn_complete:
         print("WAIT")
