@@ -14,6 +14,37 @@ class Action():
         self.delta_3 = delta_3
         self.price = price
 
+def get_best_potion(actions):
+    best_price = 0
+    best_potion = 0
+    for i in actions:
+        if i.action_type == "BREW" and i.price > best_price:
+            best_potion = i.action_id
+            best_price = i.price
+    return best_potion
+
+def return_deltas(potion_id, actions):
+    delta_0, delta_1, delta_2, delta_3 = 0, 0, 0, 0
+    for i in actions:
+        if i.action_id == potion_id:
+            delta_0, delta_1, delta_2, delta_3 = i.delta_0, i.delta_1, i.delta_2, i.delta_3
+    return delta_0, delta_1, delta_2, delta_3
+
+def find_cast(delta_index, actions):
+    usable_cast = 0
+    for i in actions:
+        if i.action_type == "CAST":
+            if delta_index == 0 and i.delta_0 > 0:
+                usable_cast = i.action_id
+            elif delta_index == 1 and i.delta_1 > 0:
+                usable_cast = i.action_id
+            elif delta_index == 2 and i.delta_2 > 0:
+                usable_cast = i.action_id
+            elif delta_index == 3 and i.delta_3 > 0:
+                usable_cast = i.action_id
+    return usable_cast
+
+
 
 
 # game loop
@@ -36,6 +67,8 @@ while True:
         action = Action(action_id, action_type, delta_0, delta_1, delta_2, delta_3, price)
         actions.append(action)
 
+
+    inv_0, inv_1, inv_2, inv_3, = 0, 0, 0, 0
     for i in range(2):
         # inv_0: tier-0 ingredients in inventory
         # score: amount of rupees
@@ -44,9 +77,25 @@ while True:
     # Write an action using print
     # To debug: print("Debug messages...", file=sys.stderr, flush=True)
 
-    for i in actions:
-        if (inv_0 + i.delta_0) >= 0 and (inv_1 + i.delta_1) >= 0 and (inv_2 + i.delta_2) >= 0 and (inv_3 + i.delta_3) >= 0 and i.price > 10:
-            print("BREW " + str(i.action_id))
-            break
+    best_potion = get_best_potion(actions)
+
+    best_delta_0, best_delta_1, best_delta_2, best_delta_3, = return_deltas(best_potion, actions)
+    
+    if best_delta_3 + inv_3 < 0:
+        to_cast = find_cast(3, actions)
+        to_cast_delta_0, to_cast_delta_1, to_cast_delta_2, to_cast_delta_3, = return_deltas(to_cast, actions)
+        if to_cast_delta_2 + inv_2 < 0:
+            to_cast = find_cast(2, actions)
+            to_cast_delta_0, to_cast_delta_1, to_cast_delta_2, to_cast_delta_3, = return_deltas(to_cast, actions)
+            if to_cast_delta_1 + inv_1 < 0:
+                to_cast = find_cast(1, actions)
+                to_cast_delta_0, to_cast_delta_1, to_cast_delta_2, to_cast_delta_3, = return_deltas(to_cast, actions)
+                if to_cast_delta_0 + inv_0 < 0:
+                    to_cast = find_cast(0, actions)
+                    to_cast_delta_0, to_cast_delta_1, to_cast_delta_2, to_cast_delta_3, = return_deltas(to_cast, actions)
+                else:
+                    print("CAST " + str(to_cast))
+
+    
 
     # in the first league: BREW <id> | WAIT; later: BREW <id> | CAST <id> [<times>] | LEARN <id> | REST | WAIT
