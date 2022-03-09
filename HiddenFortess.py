@@ -31,11 +31,17 @@ for a in range(size):
 
 #Adding b to create augmented matrix
 input_index = 0
-for i in range(size):
+for h in range(size):
     row = input()
     for i in row:
-        equations[input_index].append(int(i))
-        input_index += 1
+        value = 0
+        for j in "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ":
+            if i == j:
+                equations[input_index].append(int(value))
+                input_index += 1
+            value += 1
+            
+        
 
 
 
@@ -52,7 +58,7 @@ for i in range(size*size):
     divider = equations[current_line][current_line]
     element_checked = 0
     for j in equations[current_line]:
-        equations[current_line][element_checked] = round(equations[current_line][element_checked]/divider, 3)
+        equations[current_line][element_checked] = equations[current_line][element_checked]/divider
         element_checked += 1
     
     #print("BEFORE") #Used for debugging
@@ -90,7 +96,7 @@ line_checked = 0
 for i in range(size):
     answer = ""
     for j in range(size):
-        if int(equations[line_checked][-1]) == 1:
+        if int(round(equations[line_checked][-1])) == 1:
             answer += "O"
         else:
             answer += "."
