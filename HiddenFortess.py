@@ -1,45 +1,71 @@
 import sys
 import math
+import numpy
 
 # Auto-generated code below aims at helping you parse
 # the standard input according to the problem statement.
 
-input_lines = []
-output_lines = []
-empty_list = []
+equations = []
+equation = 0
 size = int(input())
+
+#Generating the Linear Equations System
+x, y, z, w = 0, 0, 0, 0
+for a in range(size):
+    y = 0
+    for b in range(size):
+        z = 0
+        equations.append([])
+        for c in range(size):
+            w = 0
+            for d in range(size):
+                if x == z or y == w:
+                    equations[equation].append(int(1))
+                else:
+                    equations[equation].append(int(0))
+                w += 1
+            z += 1
+        y += 1
+        equation += 1
+    x += 1
+
+#Adding b to create augmented matrix
+input_index = 0
 for i in range(size):
     row = input()
-    input_lines.append(row)
-    output_lines.append(empty_list)
-    output_row = 0
-    for j in range(size):
-        output_lines.insert(output_row, "o")
-        output_row += 1
+    for i in row:
+        equations[input_index].append(int(i))
+        input_index += 1
 
-print(output_lines)
-#Clearing 0s
-row_index_input = 0
-for i in input_lines:
-    col_index_input = 0
-    for j in i:
-        if j == 0:
-            row_index_output = 0
-            for k in output_lines:
-                col_index_output = 0
-                for l in k:
-                    if row_index_output == row_index_input and col_index_input == col_index_output:
-                        output_lines[row_index_output][col_index_output] = "."
-                    col_index_output += 1
-                row_index_output += 1
-        col_index_input += 1
-    row_index_input += 1
+#My first attempt at Gauss Jordan
+current_line = 0
+ratio = 0
+divider = 1
+for i in range(size*size):
+    while equations[current_line][current_line] == 0:
+        equations[current_line] += [equations[current_line].pop(current_line)]
 
-            
+    #Reducing pivot to 1
+    divider = equations[current_line][current_line]
+    print(current_line)
+    print(divider)
+    element_checked = 0
+    for j in equations[current_line]:
+        equations[current_line][element_checked] = round(equations[current_line][element_checked]/divider, 3)
+        element_checked += 1
+        
 
-for i in range(size):
+    #Putting zeros on the current column
+    line_checked = 0
+    for j in equations:
+        if j[current_line] != 0 and line_checked != current_line:
+            modifier = -1*j[current_line]
+            for k in range(size*size + 1):
+                j[k] = j[k] + modifier*equations[current_line][k] 
+        line_checked += 1
 
+    current_line += 1
     # Write an answer using print
     # To debug: print("Debug messages...", file=sys.stderr, flush=True)
 
-    print(output_lines[i-1])
+    print(equations)
