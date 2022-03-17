@@ -17,15 +17,17 @@ for i in range(n):
     if previous_y == land_y:
         first_x = previous_x
         last_x = land_x
+        landing_height = land_y
     previous_y = land_y
     previous_x = land_x
 
 landing_zone.append(first_x)
 landing_zone.append(last_x)
 
-print(landing_zone)
 
-#print(last_x)
+first_turn = True
+angle = 0
+speed = 2
 # game loop
 while True:
     # hs: the horizontal speed (in m/s), can be negative.
@@ -40,4 +42,41 @@ while True:
 
 
     # R P. R is the desired rotation angle. P is the desired thrust power.
-    print("-20 3")
+
+    #Determining starting position
+    if x < landing_zone[0] and first_turn:
+        side = "left"
+        first_turn = False
+    elif x > landing_zone[1]:
+        side = "right"
+        first_turn = False
+    else:
+        side = "center"
+        first_turn = False
+
+    #Determining Angle
+    if x < landing_zone[0] and hs < 35:
+        angle = -15
+    elif x < landing_zone[0] and hs > 35:
+        angle = 5
+    elif x > landing_zone[1] and hs > -35:
+        angle = 15
+    elif x > landing_zone[1] and hs < -35:
+        angle = -5
+    elif landing_zone[0] < x < landing_zone[1] and hs > 17:
+        angle = 10
+    elif landing_zone[0] < x < landing_zone[1] and hs < -17:
+        angle = -10
+    elif landing_zone[0] < x < landing_zone[1] and -17 < hs < 17:
+        angle = 0
+
+
+    if vs < -35:
+        speed = "4"
+    else:
+        speed = "1"
+    print(str(angle) + " " + str(speed))
+
+
+
+    
