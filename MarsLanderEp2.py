@@ -54,27 +54,57 @@ while True:
         side = "center"
         first_turn = False
 
+    #Determining maximum horizontal speed
+    if x < landing_zone[0]:
+        max_hs = 50
+        min_hs = 27
+        if landing_zone[0] - x < 250:
+            max_hs = 15
+            min_hs = 5
+    elif x > landing_zone[1]:
+        max_hs = -27
+        min_hs = -50
+        if x - landing_zone[1] < 250:
+            max_hs = -5
+            min_hs = -15
+    else:
+        min_hs = -15
+        max_hs = 15
+
+
     #Determining Angle
-    if x < landing_zone[0] and hs < 35:
-        angle = -15
-    elif x < landing_zone[0] and hs > 35:
-        angle = 5
-    elif x > landing_zone[1] and hs > -35:
-        angle = 15
-    elif x > landing_zone[1] and hs < -35:
-        angle = -5
-    elif landing_zone[0] < x < landing_zone[1] and hs > 17:
-        angle = 10
-    elif landing_zone[0] < x < landing_zone[1] and hs < -17:
-        angle = -10
-    elif landing_zone[0] < x < landing_zone[1] and -17 < hs < 17:
+    if hs > max_hs:
+        angle = 25
+        if landing_zone[0] < x < landing_zone[1]:
+            angle = 45 
+    elif hs < min_hs:
+        angle = -25
+        if landing_zone[0] < x < landing_zone[1]:
+            angle = -45
+    else:
         angle = 0
 
+    if hs < -50:
+        angle = -40
+        if landing_zone[0] < x < landing_zone[1]:
+            angle = -50
+    elif hs > 50:
+        angle = 40
+        if landing_zone[0] < x < landing_zone[1]:
+            angle = 50
 
-    if vs < -35:
+    #Vertical Speed
+    if vs < -30:
         speed = "4"
+    elif vs < -25:
+        speed = "3"
+    elif vs < -15:
+        speed = "2"
     else:
         speed = "1"
+
+    if angle > 10 or angle < -10:
+        speed = "4"
     print(str(angle) + " " + str(speed))
 
 
