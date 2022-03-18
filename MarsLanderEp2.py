@@ -105,6 +105,25 @@ while True:
 
     if angle > 10 or angle < -10:
         speed = "4"
+
+    #High Plateau scenario
+    if x > landing_zone[1]:
+        if x - landing_zone[1] > y - landing_height:
+            if hs < -50:
+                angle = 0
+                speed = "4"
+            else:
+                angle = 26
+                speed = "4"
+    elif x < landing_zone[0]:
+        if landing_zone[0] -x > y -landing_height:
+            if hs > 50:
+                angle = 0
+                speed = "4"
+            else:
+                angle = -26
+                speed = "4"
+
     print(str(angle) + " " + str(speed))
 
 
