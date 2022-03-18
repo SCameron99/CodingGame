@@ -94,22 +94,22 @@ while True:
             angle = 50
 
     #Vertical Speed
-    if vs < -30:
+    if vs < -38:
         speed = "4"
-    elif vs < -25:
+    elif vs < -28:
         speed = "3"
-    elif vs < -15:
+    elif vs < -18:
         speed = "2"
     else:
         speed = "1"
 
-    if angle > 10 or angle < -10:
+    if angle > 25 or angle < -25:
         speed = "4"
 
     #High Plateau scenario
     if x > landing_zone[1]:
         if x - landing_zone[1] > y - landing_height:
-            if hs < -50:
+            if hs < -75:
                 angle = 0
                 speed = "4"
             else:
@@ -117,7 +117,7 @@ while True:
                 speed = "4"
     elif x < landing_zone[0]:
         if landing_zone[0] -x > y -landing_height:
-            if hs > 50:
+            if hs > 75:
                 angle = 0
                 speed = "4"
             else:
