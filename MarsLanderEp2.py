@@ -108,7 +108,7 @@ while True:
 
     #High Plateau scenario
     if x > landing_zone[1]:
-        if x - landing_zone[1] > y - landing_height:
+        if x - landing_zone[1] > 1.5*(y - landing_height):
             if hs < -75:
                 angle = 0
                 speed = "4"
@@ -116,7 +116,7 @@ while True:
                 angle = 26
                 speed = "4"
     elif x < landing_zone[0]:
-        if landing_zone[0] -x > y -landing_height:
+        if landing_zone[0] -x > 1.5*(y -landing_height):
             if hs > 75:
                 angle = 0
                 speed = "4"
