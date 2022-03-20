@@ -32,30 +32,40 @@ solution = ""
 current_stone = "1"
 next_stone = "2"
 previous_stone = "30"
+two_next_stone = "3"
+two_previous_stone = "29"
 
 for i in magic_phrase:
     x = char_values[i]
     a = distance_between_letter(stones_values[previous_stone], i, char_values)
     b = distance_between_letter(stones_values[current_stone], i, char_values)
     c = distance_between_letter(stones_values[next_stone], i, char_values)
+    g = distance_between_letter(stones_values[two_next_stone], i, char_values)
+    h = distance_between_letter(stones_values[two_previous_stone], i, char_values)
 
     # finding the most efficient stone
     d = abs(a) + 1
     e = abs(b)
     f = abs(c) + 1
+    l = abs(g) + 2
+    m = abs(h) + 2
+    
 
     
     
     
     #Left is the best option (using a)
-    if d < e and d <= f:
+    if d < e and d <= f and d <= l and d <= m:
         solution += "<"
 
+        two_next_stone = next_stone
         next_stone = current_stone
         current_stone = previous_stone
-        previous_stone = str(int(previous_stone) - 1)
-        if previous_stone == "0":
-            previous_stone = "30"
+        previous_stone = two_previous_stone
+        two_previous_stone = str(int(two_previous_stone) - 1)
+
+        if two_previous_stone == "0":
+            two_previous_stone = "30"
             
         for k in range(abs(a)):
 
@@ -74,14 +84,16 @@ for i in magic_phrase:
                 stones_values[current_stone] = inv_char_values[new_value_index]
 
     #Right is the best option (using c)
-    elif f < d and f < e:
+    elif f < d and f < e and f <= l and f <= m:
         solution += ">"
 
+        two_previous_stone = previous_stone
         previous_stone = current_stone
         current_stone = next_stone
-        next_stone = str(int(next_stone) + 1)
-        if next_stone == "31":
-            next_stone = "1"
+        next_stone = two_next_stone
+        two_next_stone = str(int(two_next_stone) + 1)
+        if two_next_stone == "31":
+            two_next_stone = "1"
 
         for k in range(abs(c)):
 
@@ -99,6 +111,79 @@ for i in magic_phrase:
                 solution += "-"
                 stones_values[current_stone] = inv_char_values[new_value_index]
 
+    #Left - Left is the best option(using h)
+    elif m < d and m < e and m < f and m <= l:
+        solution += "<<"
+
+        two_next_stone = next_stone
+        next_stone = current_stone
+        current_stone = previous_stone
+        previous_stone = two_previous_stone
+        two_previous_stone = str(int(two_previous_stone) - 1)
+
+        if two_previous_stone == "0":
+            two_previous_stone = "30"
+
+        two_next_stone = next_stone
+        next_stone = current_stone
+        current_stone = previous_stone
+        previous_stone = two_previous_stone
+        two_previous_stone = str(int(two_previous_stone) - 1)
+
+        if two_previous_stone == "0":
+            two_previous_stone = "30"
+
+        for k in range(abs(h)):
+
+            if h > 0:
+                new_value_index = char_values[stones_values[current_stone]] + 1
+                if new_value_index == 14:
+                    new_value_index = -13
+                solution += "+"
+                stones_values[current_stone] = inv_char_values[new_value_index]
+
+            elif h < 0:
+                new_value_index = char_values[stones_values[current_stone]] - 1
+                if new_value_index == -14:
+                    new_value_index = 13
+                solution += "-"
+                stones_values[current_stone] = inv_char_values[new_value_index]
+
+    #Right - Right is the best option (using g)
+    elif l < d and l < e and l < f and l < m:
+        solution += ">>"
+
+        two_previous_stone = previous_stone
+        previous_stone = current_stone
+        current_stone = next_stone
+        next_stone = two_next_stone
+        two_next_stone = str(int(two_next_stone) + 1)
+        if two_next_stone == "31":
+            two_next_stone = "1"
+
+        two_previous_stone = previous_stone
+        previous_stone = current_stone
+        current_stone = next_stone
+        next_stone = two_next_stone
+        two_next_stone = str(int(two_next_stone) + 1)
+        if two_next_stone == "31":
+            two_next_stone = "1"
+
+        for k in range(abs(g)):
+
+            if g > 0:
+                new_value_index = char_values[stones_values[current_stone]] + 1
+                if new_value_index == 14:
+                    new_value_index = -13
+                solution += "+"
+                stones_values[current_stone] = inv_char_values[new_value_index]
+
+            elif g < 0:
+                new_value_index = char_values[stones_values[current_stone]] - 1
+                if new_value_index == -14:
+                    new_value_index = 13
+                solution += "-"
+                stones_values[current_stone] = inv_char_values[new_value_index]
     #center is the best option
     else:
 
