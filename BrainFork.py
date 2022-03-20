@@ -11,7 +11,8 @@ char_values = {" ": 0, "A": 1, "B": 2, "C": 3, "D": 4, "E": 5, "F": 6, "G": 7, "
 inv_char_values = {v: k for k, v in char_values.items()}
 
 stones_values = {"1": " ", "2": " ", "3": " ", "4": " ", "5": " ", "6": " ", "7": " ", "8": " ", "9": " ","10": " ",
-                 "11": " ", "12": " ", "13": " ", "14": " ", "15": " ", "16": " ", "17": " ", "18": " ", "19": " ", "20": " ",}
+                 "11": " ", "12": " ", "13": " ", "14": " ", "15": " ", "16": " ", "17": " ", "18": " ", "19": " ", "20": " ",
+                 "21": " ", "22": " ", "23": " ", "24": " ", "25": " ", "26": " ", "27": " ", "28": " ", "29": " ", "30": " "}
 
 def distance_between_letter(letter_1, letter_2, letter_values):
     x = letter_values[letter_1]
@@ -30,7 +31,7 @@ magic_phrase = input()
 solution = ""
 current_stone = "1"
 next_stone = "2"
-previous_stone = "20"
+previous_stone = "30"
 
 for i in magic_phrase:
     x = char_values[i]
@@ -39,22 +40,25 @@ for i in magic_phrase:
     c = distance_between_letter(stones_values[next_stone], i, char_values)
 
     # finding the most efficient stone
-
     d = abs(a) + 1
     e = abs(b)
     f = abs(c) + 1
+
+    
+    
     
     #Left is the best option (using a)
-    if d < e and d < f:
+    if d < e and d <= f:
         solution += "<"
 
         next_stone = current_stone
         current_stone = previous_stone
         previous_stone = str(int(previous_stone) - 1)
         if previous_stone == "0":
-            previous_stone = "20"
+            previous_stone = "30"
             
         for k in range(abs(a)):
+
             if a > 0:
                 new_value_index = char_values[stones_values[current_stone]] + 1
                 if new_value_index == 14:
@@ -62,12 +66,69 @@ for i in magic_phrase:
                 solution += "+"
                 stones_values[current_stone] = inv_char_values[new_value_index]
 
+            elif a < 0:
+                new_value_index = char_values[stones_values[current_stone]] - 1
+                if new_value_index == -14:
+                    new_value_index = 13
+                solution += "-"
+                stones_values[current_stone] = inv_char_values[new_value_index]
+
+    #Right is the best option (using c)
+    elif f < d and f < e:
+        solution += ">"
+
+        previous_stone = current_stone
+        current_stone = next_stone
+        next_stone = str(int(next_stone) + 1)
+        if next_stone == "31":
+            next_stone = "1"
+
+        for k in range(abs(c)):
+
+            if c > 0:
+                new_value_index = char_values[stones_values[current_stone]] + 1
+                if new_value_index == 14:
+                    new_value_index = -13
+                solution += "+"
+                stones_values[current_stone] = inv_char_values[new_value_index]
+
+            elif c < 0:
+                new_value_index = char_values[stones_values[current_stone]] - 1
+                if new_value_index == -14:
+                    new_value_index = 13
+                solution += "-"
+                stones_values[current_stone] = inv_char_values[new_value_index]
+
+    #center is the best option
+    else:
+
+        for k in range(abs(b)):
+
+            if b > 0:
+                new_value_index = char_values[stones_values[current_stone]] + 1
+                if new_value_index == 14:
+                    new_value_index = -13
+                solution += "+"
+                stones_values[current_stone] = inv_char_values[new_value_index]
+
+            if b < 0:
+                new_value_index = char_values[stones_values[current_stone]] - 1
+                if new_value_index == -14:
+                    new_value_index = 13
+                solution += "-"
+                stones_values[current_stone] = inv_char_values[new_value_index]
+    
+    solution += "."
 
 
-    for j in range(abs(x)):
-        if x > 0:
-            solution += "+"
-        elif x < 0:
-            solution += "-"
-    solution += ".>"
+
+
+    #for j in range(abs(x)):
+     #   if x > 0:
+      #      solution += "+"
+       # elif x < 0:
+        #    solution += "-"
+    #solution += ".>"
+
+#print(d, e, f)
 print(solution)
