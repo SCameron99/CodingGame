@@ -146,6 +146,8 @@ while current_line < len(code):
             if a[i_1] == "tlt":
                 if a[i_2] == "dat":
                     v = dat
+                elif a[i_2] == "acc":
+                    v = acc
                 try:
                     w = int(a[i_3])
                 except:
@@ -175,6 +177,26 @@ while current_line < len(code):
                     acc = int(str(acc)[(-1)*digit-1])
                 else:
                     acc = 0
+
+            if a[i_1] == "dst":
+                try:
+                    digit_1 = int(a[i_2])
+                except:
+                    pass
+                if a[i_2] == "acc":
+                    digit_1 = acc
+
+                try:
+                    digit_2 = int(a[i_3])
+                except:
+                    pass
+                if a[i_3] == "dat":
+                    digit_2 = dat
+
+                acc_str = str(acc)
+                idx_to_replace = int(((-1)*digit_1)-1)
+                acc = int(acc_str[:idx_to_replace] + str(digit_2) + acc_str[idx_to_replace+1:])
+                
 
 
         except:
