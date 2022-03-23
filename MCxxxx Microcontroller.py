@@ -21,42 +21,88 @@ for i in range(n):
 #print(data)
 #print(code)
 
-
+current_line = int(0)
 x = 0 # the value that is mov
-for i in range(len(code)):
-    a = code[i].split()
-    if a[0] == "mov":
-        if a[1] == "x0":
-            x = data.pop(0)
-        elif a[1] == "dat":
-            x = dat
-        elif a[1] == "acc":
-            x = acc
+while current_line < len(code):
+    if not code[current_line].startswith("#"):
+        a = code[current_line].split()
+        i_1 = 0
+        i_2 = 1
+        i_3 = 2
+
+        if a[i_1].endswith(":"):
+            i_1 = 1
+            i_2 = 2
+            i_3 = 3
         try:
-            x = int(a[1])
+            if a[i_1] == "mov":
+                try:
+                    if a[i_2] == "x0":
+                        x = data.pop(0)
+                    elif a[i_2] == "dat":
+                        x = dat
+                    elif a[i_2] == "acc":
+                        x = acc
+                    try:
+                        x = int(a[i_2])
+                    except:
+                        pass
+                except:
+                    pass
+    
+        
+                try:
+                    if a[i_3] == "x1":
+                        output.append(x)
+                    elif a[i_3] == "dat":
+                        dat = x
+                    elif a[i_3] == "acc":
+                        acc = x
+                except:
+                    pass
+
+            if a[i_1] == "add":
+                if a[i_2] == "dat":
+                    acc = acc + dat
+                try:
+                    acc = acc + int(a[i_2])
+                except:
+                    pass
+
+            if a[i_1] == "sub":
+                if a[i_2] == "dat":
+                    acc = acc - dat
+                try:
+                    acc = acc - int(a[i_2])
+                except:
+                    pass
+
+            if a[i_1] == "mul":
+                if a[i_2] == "dat":
+                    acc = acc * dat
+                try:
+                    acc = acc * int(a[i_2])
+                except:
+                    pass
+
+            if a[i_1] == "not":
+                if acc == 0:
+                    acc = 100
+                else:
+                    acc = 0
+
+            if a[i_1] == "jmp":
+                jump_line = 0
+                for i in code:
+                    j = i.split()
+                    k = j[0].strip(":")
+                    if a[i_2] == k:
+                        current_line = jump_line -1
+                    jump_line += 1
         except:
             pass
-        
-
-        if a[2] == "x1":
-            output.append(x)
-        elif a[2] == "dat":
-            dat = x
-        elif a[2] == "acc":
-            acc = x
-
-    if a[0] == "add":
-        if a[1] == "dat":
-            acc = acc + dat
-
-    if a[0] == "sub":
-        if a[1] == "dat":
-            acc = acc - dat
-
-    if a[0] == "mul":
-        if a[1] == "dat":
-            acc = acc * dat
-
+    
+    current_line += 1
 
 
 #Printing Data
