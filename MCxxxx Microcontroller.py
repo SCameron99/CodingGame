@@ -53,6 +53,10 @@ for i in range(len(code)):
         if a[1] == "dat":
             acc = acc - dat
 
+    if a[0] == "mul":
+        if a[1] == "dat":
+            acc = acc * dat
+
 
 
 #Printing Data
