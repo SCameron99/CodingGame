@@ -22,6 +22,7 @@ for i in range(n):
 #print(code)
 
 current_line = int(0)
+condition = 0
 x = 0 # the value that is mov
 while current_line < len(code):
     if not code[current_line].startswith("#"):
@@ -41,6 +42,22 @@ while current_line < len(code):
             i_1 = 1
             i_2 = 2
             i_3 = 3
+
+        try:
+            if (a[i_1] == "+" and condition != 1) or (a[i_1] == "-" and condition != -1):
+                i_1 = 10
+                i_2 = 20
+                i_3 = 30
+        except:
+            pass
+
+        try:
+            if (a[i_1] == "+" and condition == 1) or (a[i_1] == "-" and condition == -1):
+                i_1 = 1
+                i_2 = 2
+                i_3 = 3
+        except:
+            pass
 
         try: #if there is no instructions after the label
             if a[i_1] == "mov":
@@ -101,6 +118,58 @@ while current_line < len(code):
                     if a[i_2] == k:
                         current_line = jump_line -1
                     jump_line += 1
+
+            if a[i_1] == "teq":
+                if a[i_2] == "dat":
+                    v = dat
+                try:
+                    w = int(a[i_3])
+                except:
+                    pass
+                if v == w:
+                    condition = 1
+                else:
+                    condition = -1
+
+            if a[i_1] == "tgt":
+                if a[i_2] == "dat":
+                    v = dat
+                try:
+                    w = int(a[i_3])
+                except:
+                    pass
+                if v > w:
+                    condition = 1
+                else:
+                    condition = -1
+
+            if a[i_1] == "tlt":
+                if a[i_2] == "dat":
+                    v = dat
+                try:
+                    w = int(a[i_3])
+                except:
+                    pass
+                if v < w:
+                    condition = 1
+                else:
+                    condition = -1
+
+            if a[i_1] == "tcp":
+                if a[i_2] == "dat":
+                    v = dat
+                try:
+                    w = int(a[i_3])
+                except:
+                    pass
+                if v > w:
+                    condition = 1
+                elif v == w:
+                    condition = 0
+                else:
+                    condition = -1
+
+
         except:
             pass
     
@@ -110,6 +179,10 @@ while current_line < len(code):
 j = len(output)
 c = 0
 for i in output:
+    if i > 999:
+        i = 999
+    elif i < -999:
+        i = -999
     print(i, end="")
     c += 1
     if c < j:
