@@ -23,8 +23,8 @@ for i in range(n):
 
 
 x = 0 # the value that is mov
-for i in code:
-    a = i.split()
+for i in range(len(code)):
+    a = code[i].split()
     if a[0] == "mov":
         if a[1] == "x0":
             x = data.pop(0)
@@ -32,6 +32,11 @@ for i in code:
             x = dat
         elif a[1] == "acc":
             x = acc
+        try:
+            x = int(a[1])
+        except:
+            pass
+        
 
         if a[2] == "x1":
             output.append(x)
@@ -39,6 +44,14 @@ for i in code:
             dat = x
         elif a[2] == "acc":
             acc = x
+
+    if a[0] == "add":
+        if a[1] == "dat":
+            acc = acc + dat
+
+    if a[0] == "sub":
+        if a[1] == "dat":
+            acc = acc - dat
 
 
 
