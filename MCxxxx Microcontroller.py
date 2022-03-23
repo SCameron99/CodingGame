@@ -30,36 +30,38 @@ while current_line < len(code):
         i_2 = 1
         i_3 = 2
 
-        if a[i_1].endswith(":"):
+        if a[i_1] == "@":
             i_1 = 1
             i_2 = 2
             i_3 = 3
-        try:
+            code[current_line] = code[current_line].replace("@", "#")
+
+
+        if a[i_1].endswith(":"): # the code starts with a label
+            i_1 = 1
+            i_2 = 2
+            i_3 = 3
+
+        try: #if there is no instructions after the label
             if a[i_1] == "mov":
+                if a[i_2] == "x0":
+                    x = data.pop(0)
+                elif a[i_2] == "dat":
+                    x = dat
+                elif a[i_2] == "acc":
+                    x = acc
                 try:
-                    if a[i_2] == "x0":
-                        x = data.pop(0)
-                    elif a[i_2] == "dat":
-                        x = dat
-                    elif a[i_2] == "acc":
-                        x = acc
-                    try:
-                        x = int(a[i_2])
-                    except:
-                        pass
+                    x = int(a[i_2])
                 except:
                     pass
     
         
-                try:
-                    if a[i_3] == "x1":
-                        output.append(x)
-                    elif a[i_3] == "dat":
-                        dat = x
-                    elif a[i_3] == "acc":
-                        acc = x
-                except:
-                    pass
+                if a[i_3] == "x1":
+                    output.append(x)
+                elif a[i_3] == "dat":
+                    dat = x
+                elif a[i_3] == "acc":
+                    acc = x
 
             if a[i_1] == "add":
                 if a[i_2] == "dat":
@@ -103,7 +105,6 @@ while current_line < len(code):
             pass
     
     current_line += 1
-
 
 #Printing Data
 j = len(output)
