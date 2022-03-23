@@ -169,6 +169,13 @@ while current_line < len(code):
                 else:
                     condition = -1
 
+            if a[i_1] == "dgt":
+                digit = int(a[i_2])
+                if digit < len(str(acc)):
+                    acc = int(str(acc)[(-1)*digit-1])
+                else:
+                    acc = 0
+
 
         except:
             pass
