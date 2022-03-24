@@ -193,11 +193,17 @@ while current_line < len(code):
                 if a[i_3] == "dat":
                     digit_2 = dat
 
-                acc_str = str(acc)
-                idx_to_replace = int(((-1)*digit_1)-1)
-                acc = int(acc_str[:idx_to_replace] + str(digit_2) + acc_str[idx_to_replace+1:])
                 
+                acc = str(acc).zfill(digit_1+1)
+                if digit_1 == 0:
+                    acc = acc[:-1] + str(digit_2)
+                elif digit_1 == 1:
+                    acc = acc[:-2] + str(digit_2) + acc[-1:]
+                elif digit_1 == 2:
+                    acc = acc[:-3] + str(digit_2) + acc[-2:]
 
+                #print(acc)
+                acc = int(acc)
 
         except:
             pass
